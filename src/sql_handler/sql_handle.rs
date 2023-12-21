@@ -24,6 +24,11 @@ impl SqlHandle {
 
     pub fn select(&self, buffer: String) {
         let input = buffer.split_whitespace().collect::<Vec<&str>>();
+        match input[1].to_lowercase().to_string().as_str() {
+            "*" => println!("{:?}", self.sql.get_values()),
+            "where" => println!("{:?}", self.sql.get_values_by_name(input[2].to_string())),
+            _ => println!("Unkown command"),
+        }
         if input[1] == "*" {
             println!("{:?}", self.sql.get_values());
         }

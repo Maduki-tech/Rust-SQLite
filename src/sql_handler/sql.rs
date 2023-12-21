@@ -1,4 +1,5 @@
-// TODO: add rows to the sql
+use std::io::Write;
+
 pub struct Sql {
     data: Vec<Row>,
 }
@@ -20,14 +21,34 @@ impl Sql {
     /// * `age`:
     pub fn set_values(&mut self, name: String, age: i32) {
         self.data.push(Row { name, age });
+        self.create_file();
     }
 
     /// Get the values of the [`SQL`] struct
     pub fn get_values(&self) -> Vec<(String, i32)> {
-        return self.data
+        return self
+            .data
             .iter()
             .map(|row| (row.name.clone(), row.age))
             .collect::<Vec<(String, i32)>>();
+    }
+
+    pub fn get_values_by_name(&self, name: String) -> Vec<(String, i32)> {
+        return self
+            .data
+            .iter()
+            .filter(|row| row.name == name)
+            .map(|row| (row.name.clone(), row.age))
+            .collect::<Vec<(String, i32)>>();
+    }
+
+    fn create_file(&self) {
+        let mut file = std::fs::File::create("input.dql").unwrap();
+        file.write(format!("{} {}\n", "Name","Age").as_bytes()).unwrap();
+        for row in &self.data {
+            let row = format!("{} {}\n", row.name, row.age);
+            file.write_all(row.as_bytes()).unwrap();
+        }
     }
 }
 
