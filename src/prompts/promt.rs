@@ -1,16 +1,22 @@
 use crate::sql_handler::sql_handle::SqlHandle;
 use std::io::Write;
 
-pub struct Prompt {}
+pub struct Prompt {
+    sql_handle: SqlHandle, 
+}
 
 impl Prompt {
     pub fn new() -> Prompt {
-        Prompt {}
+        Prompt {
+            sql_handle: SqlHandle::new(),
+        }
     }
-    pub fn run(&self) {
-        let buffer = String::new();
-        let buffer = self.generate_prompt(buffer);
-        self.get_prompt(buffer);
+    pub fn run(&mut self) {
+        loop {
+            let buffer = String::new();
+            let buffer = self.generate_prompt(buffer);
+            self.get_prompt(buffer);
+        }
     }
 
     fn generate_prompt(&self, mut buffer: String) -> String {
@@ -20,14 +26,13 @@ impl Prompt {
         return buffer;
     }
 
-    fn get_prompt(&self, buffer: String) {
-        let mut handler = SqlHandle::new();
+    fn get_prompt(&mut self, buffer: String) {
         let command = self.get_command(buffer.clone());
         match command.as_str() {
-            ".exit" => handler.exit(buffer),
-            ".help" => handler.help(buffer),
-            ".create" => handler.create(buffer),
-            ".select" => handler.select(buffer),
+            ".exit" => self.sql_handle.exit(buffer),
+            ".help" => self.sql_handle.help(buffer),
+            ".insert" => self.sql_handle.insert(buffer),
+            ".select" => self.sql_handle.select(buffer),
             _ => println!("Unkown command"),
         }
     }
@@ -59,11 +64,11 @@ mod tests {
     }
 
     #[test]
-    fn test_get_prompt_create() {
+    fn test_get_prompt_insert() {
         let prompt = Prompt::new();
-        let buffer = String::from(".create");
+        let buffer = String::from(".insert");
         let sut = prompt.get_command(buffer);
-        assert_eq!(sut, ".create".to_string());
+        assert_eq!(sut, ".insert".to_string());
     }
 
     #[test]

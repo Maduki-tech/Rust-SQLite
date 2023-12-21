@@ -4,6 +4,5 @@ use crate::prompts::promt;
 
 fn main() {
     println!("Welcome to the Rust SQL CLI");
-    let promt = promt::Prompt::new();
-    promt.run();
+    promt::Prompt::new().run();
 }
