@@ -1,4 +1,4 @@
-use std::{fs::File, io::Write};
+use std::{fs::File, io::{Write, Read}};
 
 pub struct Sql {
     data: Vec<Row>,
@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn test_set_values() {
-        let mut sql = Sql::new();
+        let mut sql = Sql::new(&File::create("test.txt").unwrap());
         sql.set_values(String::from("test"), 1);
         assert_eq!(sql.get_values(), vec![(String::from("test"), 1)]);
     }

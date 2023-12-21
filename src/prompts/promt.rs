@@ -10,8 +10,6 @@ impl Prompt {
         Prompt {
             sql_handle: SqlHandle::new(file),
         }
-
-
     }
     pub fn run(&mut self) {
         loop {

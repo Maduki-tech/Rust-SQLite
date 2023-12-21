@@ -10,7 +10,12 @@ fn main() {
     if args.len() < 2 {
         panic!("Please provide a file name");
     }
-    let file = std::fs::File::create(filename).unwrap();
+    let file = std::fs::File::options()
+        .read(true)
+        .write(true)
+        .open(filename)
+        .unwrap();
+
 
     println!("Welcome to the Rust SQL CLI");
     promt::Prompt::new(&file).run();
