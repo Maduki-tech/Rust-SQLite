@@ -1,15 +1,17 @@
 use crate::sql_handler::sql_handle::SqlHandle;
-use std::io::Write;
+use std::{io::Write, fs::File};
 
 pub struct Prompt {
     sql_handle: SqlHandle, 
 }
 
 impl Prompt {
-    pub fn new() -> Prompt {
+    pub fn new(file: &File) -> Prompt {
         Prompt {
-            sql_handle: SqlHandle::new(),
+            sql_handle: SqlHandle::new(file),
         }
+
+
     }
     pub fn run(&mut self) {
         loop {

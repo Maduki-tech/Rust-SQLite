@@ -1,7 +1,8 @@
-use std::io::Write;
+use std::{fs::File, io::Write};
 
 pub struct Sql {
     data: Vec<Row>,
+    file: File,
 }
 
 struct Row {
@@ -11,8 +12,11 @@ struct Row {
 
 impl Sql {
     /// Create a new [`SQL`] struct
-    pub fn new() -> Sql {
-        Sql { data: Vec::new() }
+    pub fn new(file: &File) -> Sql {
+        Sql {
+            data: Vec::new(),
+            file: file.try_clone().unwrap(),
+        }
     }
 
     /// set the values of the [`SQL`] struct
@@ -33,6 +37,9 @@ impl Sql {
             .collect::<Vec<(String, i32)>>();
     }
 
+    /// Get the values of the [`SQL`] struct by name
+    ///
+    /// * `name`:
     pub fn get_values_by_name(&self, name: String) -> Vec<(String, i32)> {
         return self
             .data
@@ -42,12 +49,13 @@ impl Sql {
             .collect::<Vec<(String, i32)>>();
     }
 
-    fn create_file(&self) {
-        let mut file = std::fs::File::create("input.dql").unwrap();
-        file.write(format!("{} {}\n", "Name","Age").as_bytes()).unwrap();
+    fn create_file(&mut self) {
+        self.file
+            .write(format!("{} {}\n", "Name", "Age").as_bytes())
+            .unwrap();
         for row in &self.data {
             let row = format!("{} {}\n", row.name, row.age);
-            file.write_all(row.as_bytes()).unwrap();
+            self.file.write_all(row.as_bytes()).unwrap();
         }
     }
 }
